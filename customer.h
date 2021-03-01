@@ -1,0 +1,12 @@
+#ifndef VACCINE_DISTRIBUTION_SYSTEM_CUSTOMER_H
+#define VACCINE_DISTRIBUTION_SYSTEM_CUSTOMER_H
+
+
+class customer
+{
+public:
+   int customerId;
+};
+
+
+#endif //VACCINE_DISTRIBUTION_SYSTEM_CUSTOMER_H
