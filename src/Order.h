@@ -1,13 +1,13 @@
-//
-// Created by bme on 01/03/2021.
-//
+
 
 #ifndef VACCINE_DISTRIBUTION_SYSTEM_ORDER_H
 #define VACCINE_DISTRIBUTION_SYSTEM_ORDER_H
 
 
-class order
+class Order
 {
+public:
+   Order();
 };
 
 
