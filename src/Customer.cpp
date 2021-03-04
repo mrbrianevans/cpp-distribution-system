@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Customer.h"
 
-Customer::Customer(string customerDetails)
+Customer::Customer(const string &customerDetails)
 {
    // print new customer added
    sscanf(customerDetails.c_str(), "C%4hu%40[^\n]", &this->customerNumber,
@@ -16,10 +16,11 @@ void Customer::sendShipment(string date)
 {
    // print shipment
    int quantityToShip = getQuantityToShip();
-   if( quantityToShip == 0 ) return;
+   if ( quantityToShip == 0 ) return;
    cout << "OP: Customer " << setfill('0') << setw(4) << customerNumber
         << ": shipped quantity " << quantityToShip << endl;
    // print invoice
+   //todo: keep track of invoice numbers! (maybe a global variable)
    cout << "SC" << ": customer " << setfill('0') << setw(4) << customerNumber
         << ": invoice number" << ": date " << date.c_str() << ": quantity: "
         << quantityToShip << endl;
@@ -31,19 +32,19 @@ void Customer::processOrder(string orderDetails)
 {
    Order order = Order(orderDetails);
    orders.push_back(order);
-
+   //todo: error handling for incorrect input string
    cout << "OP: Customer " << setfill('0') << setw(4) << this->customerNumber
         << ": " << order.getOrderType().c_str() << " order" << ": quantity "
         << order.getQuantity() << endl;
 
-   if( order.isExpress())
+   if ( order.isExpress())
       sendShipment(order.getDate());
 }
 
 int Customer::getQuantityToShip()
 {
-   int runningTotal = 0;
-   for(auto &order : orders)
+   int       runningTotal = 0;
+   for (auto &order : orders)
    {
       runningTotal += order.getQuantity();
    }

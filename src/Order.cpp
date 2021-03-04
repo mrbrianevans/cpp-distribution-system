@@ -10,7 +10,6 @@ Order::Order(string orderDetails)
    this->express = orderType == 'X';
 }
 
-
 string Order::getDate()
 {
    return this->date;

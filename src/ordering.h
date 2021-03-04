@@ -1,17 +1,16 @@
-#ifndef VACCINE_DISTRIBUTION_SYSTEM_MAIN_H
-#define VACCINE_DISTRIBUTION_SYSTEM_MAIN_H
+#ifndef __ORDERING_H
+#define __ORDERING_H
 #include <iostream>
 #include "Customer.h"
 #include <map>
-#include <stdio.h>
+#include <cstdio>
 
 using namespace std;
 
-class main
+class ordering
 {
-public:
+ public:
    static void run(string);
 };
-
 
 #endif //VACCINE_DISTRIBUTION_SYSTEM_MAIN_H

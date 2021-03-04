@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 mkdir -p build
 
@@ -10,4 +10,4 @@ compile Customer
 compile Order
 compile main
 
-g++ -I./build build/customer.o build/order.o -o ordering
+g++ -I./build build/main.o build/Customer.o build/Order.o -o ordering
