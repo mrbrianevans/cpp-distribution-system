@@ -3,28 +3,49 @@
 #include <iostream>
 #include "Customer.h"
 
-Customer::Customer(std::string customerDetails)
+Customer::Customer(string customerDetails)
 {
    // print new customer added
-   sscanf(customerDetails.c_str(), "C%4d%40[^\n]", &this->customerNumber,
+   sscanf(customerDetails.c_str(), "C%4hu%40[^\n]", &this->customerNumber,
           this->name);
-   std::cout << "OP: Customer " << std::setfill('0') << std::setw(4)
-             << this->customerNumber << " added" << std::endl;
+   cout << "OP: Customer " << setfill('0') << setw(4) << this->customerNumber
+        << " added" << endl;
 }
 
-void Customer::sendShipment(std::string date)
+void Customer::sendShipment(string date)
 {
-   // print invoice
    // print shipment
-   std::cout << "OP: Shipment sent: (Shipment details) " << customerNumber
-             << ", quantity" << std::endl;
-   std::cout
-         << "SC: Invoice sent: (invoice details) customer number, invoice number, "
-         << date.c_str() << ", quantity" << std::endl;
+   int quantityToShip = getQuantityToShip();
+   if( quantityToShip == 0 ) return;
+   cout << "OP: Customer " << setfill('0') << setw(4) << customerNumber
+        << ": shipped quantity " << quantityToShip << endl;
+   // print invoice
+   cout << "SC" << ": customer " << setfill('0') << setw(4) << customerNumber
+        << ": invoice number" << ": date " << date.c_str() << ": quantity: "
+        << quantityToShip << endl;
+   //remove orders which have been sent (reset orders to empty)
+   orders.clear();
 }
 
-void Customer::processOrder(std::string orderDetails)
+void Customer::processOrder(string orderDetails)
 {
-   std::cout << "OP: Customer " << std::setfill('0') << std::setw(4)
-             << this->customerNumber << ": order type, quantity" << std::endl;
+   Order order = Order(orderDetails);
+   orders.push_back(order);
+
+   cout << "OP: Customer " << setfill('0') << setw(4) << this->customerNumber
+        << ": " << order.getOrderType().c_str() << " order" << ": quantity "
+        << order.getQuantity() << endl;
+
+   if( order.isExpress())
+      sendShipment(order.getDate());
+}
+
+int Customer::getQuantityToShip()
+{
+   int runningTotal = 0;
+   for(auto &order : orders)
+   {
+      runningTotal += order.getQuantity();
+   }
+   return runningTotal;
 }

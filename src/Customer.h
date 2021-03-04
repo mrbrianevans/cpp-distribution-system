@@ -4,12 +4,16 @@
 #include <list>
 #include "Order.h"
 #include <iomanip>
+using namespace std;
 
 class Customer
 {
    std::list<Order> orders;
-   char name[40];
-   int customerNumber;
+   char name[41]; // 40 characters + end of line
+   unsigned short int customerNumber;
+
+   int getQuantityToShip();
+
 public:
    explicit Customer(std::string);
 

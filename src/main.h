@@ -5,12 +5,12 @@
 #include <map>
 #include <stdio.h>
 
+using namespace std;
+
 class main
 {
-   void endOfDay();
-
 public:
-   static void run(std::string);
+   static void run(string);
 };
 
 
