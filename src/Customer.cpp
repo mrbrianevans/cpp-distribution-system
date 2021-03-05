@@ -12,7 +12,7 @@ Customer::Customer(const string &customerDetails)
         << " added" << endl;
 }
 
-void Customer::sendShipment(string date)
+void Customer::sendShipment(string date, unsigned short int *invoiceNumber)
 {
    // print shipment
    int quantityToShip = getQuantityToShip();
@@ -22,13 +22,16 @@ void Customer::sendShipment(string date)
    // print invoice
    //todo: keep track of invoice numbers! (maybe a global variable)
    cout << "SC" << ": customer " << setfill('0') << setw(4) << customerNumber
-        << ": invoice number" << ": date " << date.c_str() << ": quantity: "
+        << ": invoice " << *invoiceNumber << ": date " << date.c_str()
+        << ": quantity: "
         << quantityToShip << endl;
    //remove orders which have been sent (reset orders to empty)
    orders.clear();
+   *invoiceNumber = *invoiceNumber + 1;
 }
 
-void Customer::processOrder(string orderDetails)
+void
+Customer::processOrder(string orderDetails, unsigned short int *invoiceNumber)
 {
    Order order = Order(orderDetails);
    orders.push_back(order);
@@ -38,7 +41,7 @@ void Customer::processOrder(string orderDetails)
         << order.getQuantity() << endl;
 
    if ( order.isExpress())
-      sendShipment(order.getDate());
+      sendShipment(order.getDate(), invoiceNumber);
 }
 
 int Customer::getQuantityToShip()

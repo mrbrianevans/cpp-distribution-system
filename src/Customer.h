@@ -15,8 +15,8 @@ class Customer
 
  public:
    Customer(const std::string &);
-   void processOrder(std::string);
-   void sendShipment(std::string);
+   void processOrder(std::string, unsigned short int *);
+   void sendShipment(std::string, unsigned short int *);
 };
 
 #endif //VACCINE_DISTRIBUTION_SYSTEM_CUSTOMER_H

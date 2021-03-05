@@ -33,6 +33,7 @@ void ordering::run(std::string filename)
    testInputs[15] = "S20210203N0002110";
    testInputs[16] = "E20210203";
 
+   unsigned short int invoiceNumber = 1000;
    //todo: loop through file rather than string array
    for (int i = 0; i < 17; i++)
    {
@@ -52,7 +53,8 @@ void ordering::run(std::string filename)
                cerr << "Order placed by non-existant customer: "
                     << customerNumber << endl;
             else
-               customers.at(customerNumber).processOrder(testInputs[i]);
+               customers.at(customerNumber).processOrder(testInputs[i],
+                                                         &invoiceNumber);
             break;
          case 'E':
             sscanf(testInputs[i].c_str(), "E%8s", date);
@@ -60,7 +62,7 @@ void ordering::run(std::string filename)
             cout << "OP: end of day " << date << endl;
             //loop through customers calling sendShipment(date) on each one
             for (auto &customer : customers)
-               customer.second.sendShipment(date);
+               customer.second.sendShipment(date, &invoiceNumber);
             break;
          default: //todo: error handling
             cerr << "Unknown input string: " << testInputs[i].c_str() << endl;
