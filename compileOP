@@ -8,6 +8,8 @@ function compile() {
 
 compile Customer
 compile Order
-compile main
+compile ordering
 
-g++ -I./build build/main.o build/Customer.o build/Order.o -o ordering
+g++ -I./build build/ordering.o build/Customer.o build/Order.o -o ordering
+
+./ordering testInputFile.txt

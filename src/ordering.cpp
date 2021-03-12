@@ -1,63 +1,54 @@
+#include <string>
 #include "ordering.h"
+#define DEBUG 0
 
 int main(int argc, char **argv)
 {
    if ( argc != 2 )
-      cerr << "You need to provide a filename for the input" << endl;
-   else ordering::run(argv[1]);
+      cerr << "\x1b[31mYou need to provide a filename for the input\x1b[0m"
+           << "\nTry ./ordering testInputFile.txt" << endl;
+   else
+   {
+      ordering::run(argv[1]);
+      return 0;
+   }
+   return 1;
 }
 
 void ordering::run(std::string filename)
 {
-   // read file and process orders
-   cout << "Reading file: " << filename.c_str() << endl;
-   //todo: actually read file
-   map<unsigned short int, Customer> customers;
-   string                            testInputs[17];
-
-   testInputs[0]  = "C0001Royal Devon & Exeter Hospital";
-   testInputs[1]  = "C0002Derriford Hospital";
-   testInputs[2]  = "C0003Torbay Hospital";
-   testInputs[3]  = "S20210201N0001040";
-   testInputs[4]  = "S20210201N0001050";
-   testInputs[5]  = "E20210201";
-   testInputs[6]  = "S20210202N0001040";
-   testInputs[7]  = "S20210202N0001060";
-   testInputs[8]  = "S20210202N0002050";
-   testInputs[9]  = "S20210202N0002170";
-   testInputs[10] = "E20210202";
-   testInputs[11] = "S20210203N0001050";
-   testInputs[12] = "S20210203N0002065";
-   testInputs[13] = "S20210203N0003150";
-   testInputs[14] = "S20210203X0001190";
-   testInputs[15] = "S20210203N0002110";
-   testInputs[16] = "E20210203";
-
-   unsigned short int invoiceNumber = 1000;
-   //todo: loop through file rather than string array
-   for (int i = 0; i < 17; i++)
+   if ( DEBUG ) cout << "Opening file: " << filename.c_str() << endl;
+   ifstream input_file;
+   input_file.open(filename);
+   if ( !input_file.is_open())
    {
-      //todo: this print out is for testing only, remove before submission
-      cout << i + 1 << ": ";
-      unsigned short int customerNumber;
-      char               date[9]; // 8 characters + end of line = 9
-      switch ( testInputs[i].at(0))
+      cerr << "\x1b[31mcannot read file: \x1b[0m" << filename.c_str() << endl;
+      exit(EXIT_FAILURE);
+   }
+   string                            buffer;
+   unsigned short int                invoiceNumber = 1000;
+   unsigned short int                customerNumber;
+   char                              date[9]; // 8 characters + end of line = 9
+   map<unsigned short int, Customer> customers;
+   while ( getline(input_file, buffer))
+   {
+      switch ( buffer[0] )
       {
          case 'C':
-            sscanf(testInputs[i].c_str(), "C%4hu", &customerNumber);
-            customers.emplace(customerNumber, testInputs[i]);
+            stringstream(buffer.substr(1, 4)) >> customerNumber;
+            customers.emplace(customerNumber, buffer);
             break;
          case 'S':
-            sscanf(testInputs[i].c_str(), "S%*d%*c%4hu", &customerNumber);
-            if ( customers.end() == customers.find(customerNumber))
+            stringstream(buffer.substr(10, 4)) >> customerNumber;
+            if ( customers.find(customerNumber) == customers.end())
                cerr << "Order placed by non-existant customer: "
                     << customerNumber << endl;
             else
-               customers.at(customerNumber).processOrder(testInputs[i],
+               customers.at(customerNumber).processOrder(buffer,
                                                          &invoiceNumber);
             break;
          case 'E':
-            sscanf(testInputs[i].c_str(), "E%8s", date);
+            stringstream(buffer.substr(1, 8)) >> date;
             //todo: error handling for invalid date
             cout << "OP: end of day " << date << endl;
             //loop through customers calling sendShipment(date) on each one
@@ -65,8 +56,12 @@ void ordering::run(std::string filename)
                customer.second.sendShipment(date, &invoiceNumber);
             break;
          default: //todo: error handling
-            cerr << "Unknown input string: " << testInputs[i].c_str() << endl;
+            cerr << "\x1b[31mInvalid line: \x1b[0m" << buffer
+                 << "\n(Hint: First character must be 'C', 'S' or 'E')" << endl;
+            break;
       }
    }
+   if ( DEBUG ) cout << "Closing file" << filename.c_str() << endl;
+   input_file.close();
 }
 
