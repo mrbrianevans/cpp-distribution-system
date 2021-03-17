@@ -1,19 +1,16 @@
-
-
-#include <iostream>
 #include "Customer.h"
 
 Customer::Customer(const string &customerDetails)
 {
-   // print new customer added
-   //todo: use stringstream() instead for more c++ness
-   sscanf(customerDetails.c_str(), "C%4hu%40[^\n]", &this->customerNumber,
-          this->name);
+   stringstream(customerDetails.substr(1, 4)) >> this->customerNumber;
+   this->name = stringstream(
+         customerDetails.substr(5, MAX_CUSTOMER_NAME_LENGTH)).str();
    cout << "OP: Customer " << setfill('0') << setw(4) << this->customerNumber
         << " added" << endl;
 }
 
-void Customer::sendShipment(string date, unsigned short int *invoiceNumber)
+void
+Customer::sendShipment(unsigned int date, unsigned short int *invoiceNumber)
 {
    // print shipment
    int quantityToShip = getQuantityToShip();
@@ -22,8 +19,8 @@ void Customer::sendShipment(string date, unsigned short int *invoiceNumber)
         << ": shipped quantity " << quantityToShip << endl;
    // print invoice
    cout << "SC" << ": customer " << setfill('0') << setw(4) << customerNumber
-        << ": invoice " << *invoiceNumber << ": date " << date.c_str()
-        << ": quantity: " << quantityToShip << endl;
+        << ": invoice " << *invoiceNumber << ": date " << date << ": quantity: "
+        << quantityToShip << endl;
    //remove orders which have been sent (reset orders to empty)
    orders.clear();
    *invoiceNumber = *invoiceNumber + 1;
@@ -32,15 +29,14 @@ void Customer::sendShipment(string date, unsigned short int *invoiceNumber)
 void
 Customer::processOrder(string orderDetails, unsigned short int *invoiceNumber)
 {
-   Order order = Order(orderDetails);
+   Order order = Order(orderDetails); // can throw exceptions
    orders.push_back(order);
-   //todo: error handling for incorrect input string
    cout << "OP: Customer " << setfill('0') << setw(4) << this->customerNumber
         << ": " << order.getOrderType().c_str() << " order" << ": quantity "
-        << order.getQuantity() << endl;
+        << order.quantity << endl;
 
-   if ( order.isExpress())
-      sendShipment(order.getDate(), invoiceNumber);
+   if ( order.express )
+      sendShipment(order.date, invoiceNumber);
 }
 
 int Customer::getQuantityToShip()
@@ -48,7 +44,8 @@ int Customer::getQuantityToShip()
    int       runningTotal = 0;
    for (auto &order : orders)
    {
-      runningTotal += order.getQuantity();
+      // loop through all a customers orders, keeping a running total
+      runningTotal += order.quantity;
    }
    return runningTotal;
 }

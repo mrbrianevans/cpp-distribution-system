@@ -7,13 +7,14 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <climits>
 
 using namespace std;
 
 class ordering
 {
  public:
-   static void run(string);
+   static void run(const string &);
 };
 
 #endif //VACCINE_DISTRIBUTION_SYSTEM_MAIN_H

@@ -6,15 +6,12 @@ using namespace std;
 
 class Order
 {
-   int  quantity;
-   bool express; // true for express orders, false for normal orders
-   char date[8];
  public:
-   Order(string);
-   int getQuantity();
-   string getOrderType();
-   bool isExpress();
-   string getDate();
+   Order(const string &);
+   unsigned int       date;
+   unsigned short int quantity; // max value = 999
+   bool               express; // true for express orders, false for normal orders
+   string getOrderType() const;
 };
 
 #endif //VACCINE_DISTRIBUTION_SYSTEM_ORDER_H
