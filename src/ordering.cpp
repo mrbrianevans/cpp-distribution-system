@@ -40,7 +40,7 @@ void ordering::run(const std::string &filename)
    unsigned short int                invoiceNumber = STARTING_INVOICE_NUMBER;
    unsigned short int                customerNumber; // temporary key for map
    unsigned int                      date;
-   unsigned short int                lineNumber    = 0;
+   unsigned short int                lineNumber    = 0; // input file line num
    // map to store customers with customer number as the key
 
    map<unsigned short int, Customer> customers;
@@ -59,6 +59,15 @@ void ordering::run(const std::string &filename)
                   throw string(
                         "New customer record too short (less than the required 6 characters)");
                stringstream(buffer.substr(1, 4)) >> customerNumber;
+               //check if customer already exists
+               if ( customers.find(customerNumber) != customers.end())
+               {
+                  stringstream errorMessage;
+                  errorMessage << "Customer number " << customerNumber
+                               << " already in use. "
+                               << "Attempted to create two customers with the same number";
+                  throw errorMessage.str();
+               }
                customers.emplace(customerNumber, buffer);
                break;
             case 'S':

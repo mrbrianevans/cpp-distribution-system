@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir -p build
-# object code is stored in a build folder to keep it separate
+# object code is stored in a build folder
 function compile() {
   g++ -std=c++11 -I./ -c src/$1.cpp -o build/$1.o
 }
@@ -11,6 +11,3 @@ compile Order
 compile ordering
 
 g++ -I./build build/ordering.o build/Customer.o build/Order.o -o ordering
-
-# todo: remove this before submission (for easy testing only)
-./ordering testInputFile.txt
